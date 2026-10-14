@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monster Energy | Nuevo Merch & Cultura Monster</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Teko for bold Monster headers, Inter for clean UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        monster: {
+                            green: '#50ff00',
+                            darkgreen: '#2d8a00',
+                            black: '#0b0b0c',
+                            card: '#141417',
+                            border: '#26262b'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Teko', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'neon': '0 0 18px rgba(80, 255, 0, 0.35)',
+                        'neon-strong': '0 0 28px rgba(80, 255, 0, 0.65)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0b0c;
+            color: #f4f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Estilo de tarjetas inclinadas como en el boceto de "Últimas Noticias" */
+        .skew-card {
+            transform: skewX(-4deg);
+            transition: all 0.25s ease;
+        }
+        .skew-card > * {
+            transform: skewX(4deg);
+        }
+        .skew-card:hover {
+            transform: skewX(-4deg) translateX(6px);
+            border-color: #50ff00;
+            box-shadow: 0 0 15px rgba(80, 255, 0, 0.25);
+        }
+
+        /* Modo Wireframe Puro (Conmutable para mostrar en la entrega académica) */
+        body.wireframe-mode {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+        }
+        body.wireframe-mode .wf-panel {
+            background-color: #ffffff !important;
+            border: 2px solid #1e293b !important;
+            box-shadow: 4px 4px 0px #1e293b !important;
+            color: #0f172a !important;
+        }
+        body.wireframe-mode .wf-text {
+            color: #0f172a !important;
+        }
+        body.wireframe-mode .wf-subtext {
+            color: #475569 !important;
+        }
+        body.wireframe-mode .wf-accent {
+            color: #16a34a !important;
+        }
+        body.wireframe-mode .wf-border {
+            border-color: #1e293b !important;
+        }
+        body.wireframe-mode .wf-btn {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+        }
+
+        /* Animación de lata flotante */
+        @keyframes floatCan {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .can-floating {
+            animation: floatCan 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-monster-green selection:text-black">
+
+    <!-- BARRA DE HERRAMIENTAS DEL PROYECTO (Objetivo SMART & Conmutador Boceto/Diseño Final) -->
+    <div class="bg-zinc-900 border-b border-zinc-800 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+            <span class="bg-monster-green text-black font-bold px-2 py-0.5 rounded uppercase tracking-wider">Objetivo SMART</span>
+            <span class="text-zinc-300 hidden sm:inline">Impulsar ventas cruzadas y cultura de marca mediante la nueva sección de <strong>Merch Oficial Monster</strong>.</span>
+        </div>
+        <div class="flex items-center gap-3 ml-auto">
+            <button id="toggleWireframeBtn" onclick="toggleWireframeMode()" class="flex items-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-1 rounded-md border border-zinc-600 transition cursor-pointer">
+                <i class="fa-solid fa-pen-ruler text-monster-green"></i>
+                <span id="wfBtnText">Ver como Boceto / Wireframe B&N</span>
+            </button>
+            <button onclick="openCartModal()" class="flex items-center gap-1.5 bg-monster-green/10 hover:bg-monster-green/20 text-monster-green border border-monster-green/40 px-3 py-1 rounded-md transition font-semibold">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>Carrito (<span id="cartCount">0</span>)</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         1. HEADER / BARRA DE NAVEGACIÓN (Igual a la parte superior del boceto)
+         Izquierda: Logo "M" + "Productos" | Derecha: "Zona" + "Cuenta"
+    ====================================================================== -->
+    <header class="w-full max-w-7xl mx-auto pt-4 px-4 sm:px-6">
+        <nav class="wf-panel bg-monster-card border-2 border-monster-border rounded-xl px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg">
+            
+            <!-- Lado Izquierdo: Logo M + Separador vertical + Productos -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <!-- Logo Monster Garra "M" -->
+                <a href="#" class="flex items-center gap-2 group" title="Inicio Monster Energy">
+                    <div class="w-11 h-11 rounded-lg bg-black border border-monster-green/50 flex items-center justify-center shadow-neon group-hover:scale-105 transition">
+                        <!-- SVG Garra Monster M -->
+                        <svg class="w-7 h-7 text-monster-green fill-current" viewBox="0 0 64 64">
+                            <path d="M10 8 C14 22, 13 42, 16 58 L22 58 C20 40, 21 25, 20 14 L29 36 L34 36 L43 14 C42 25, 43 40, 41 58 L47 58 C50 42, 49 22, 53 8 L43 8 L32 28 L21 8 Z"/>
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Línea divisoria vertical tal como en el dibujo -->
+                <div class="h-8 w-0.5 bg-zinc-700 wf-border"></div>
+
+                <!-- Enlaces Principales ("Productos" destacado como en el boceto) -->
+                <div class="flex items-center gap-6">
+                    <div class="relative group">
+                        <button onclick="scrollToSection('merch-section')" class="wf-text font-display text-2xl sm:text-3xl tracking-wide uppercase text-white hover:text-monster-green transition flex items-center gap-2">
+                            Productos
+                            <span class="bg-monster-green text-black text-[10px] font-sans font-extrabold px-1.5 py-0.5 rounded uppercase"> +Merch</span>
+                        </button>
+                    </div>
+                    <a href="#embajadores" class="wf-subtext hidden md:inline-block text-sm font-medium text-zinc-400 hover:text-monster-green transition">Embajadores</a>
+                    <a href="#noticias" class="wf-subtext hidden md:inline-block text-sm font-medium text-zinc-400 hover:text-monster-green transition">Noticias</a>
+                </div>
+            </div>
+
+            <!-- Lado Derecho: Ícono + Zona | Ícono + Cuenta -->
+            <div class="flex items-center gap-4 sm:gap-7">
+                <!-- Selector de Zona -->
+                <button onclick="toggleZoneModal()" class="wf-text flex items-center gap-2 text-sm sm:text-base font-medium text-zinc-200 hover:text-monster-green transition group">
+                    <i class="fa-solid fa-location-arrow text-monster-green group-hover:rotate-45 transition-transform"></i>
+                    <span class="font-display text-xl sm:text-2xl tracking-wide uppercase">Zona</span>
+                    <span id="currentZoneBadge" class="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded border border-zinc-700 hidden sm:inline">LATAM</span>
+                </button>
+
+                <!-- Botón de Cuenta -->
+                <button onclick="toggleAccountModal()" class="wf-text flex items-center gap-2 text-sm sm:text-base font-medium text-zinc-200 hover:text-monster-green transition group">
+                    <i class="fa-regular fa-circle-user text-monster-green text-lg group-hover:scale-110 transition-transform"></i>
+                    <span class="font-display text-xl sm:text-2xl tracking-wide uppercase">Cuenta</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- =====================================================================
+         2. SECCIÓN PRINCIPAL SUPERIOR (2 Bloques Asimétricos según el boceto)
+         Izquierda (~65%): "NUEVO MERCH" + 3 Productos + "CONOCELOS AQUI"
+         Derecha (~35%): "NUESTRAS ENERGETICAS" + Lata Monster + "DE SIEMPRE"
+    ====================================================================== -->
+    <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 flex flex-col gap-8">
+        
+        <section id="merch-section" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- BLOQUE IZQUIERDO GRANDE: NUEVO MERCH (8 columnas de 12) -->
+            <div class="lg:col-span-8 wf-panel bg-monster-card border-2 border-monster-border rounded-3xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group">
+                <!-- Resplandor decorativo de fondo -->
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-monster-green/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Encabezado del bloque -->
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-monster-green wf-accent block mb-1">
+                            <i class="fa-solid fa-fire mr-1"></i> Cultura & Estilo de Vida Monster
+                        </span>
+                        <h1 class="wf-text font-display text-5xl sm:text-6xl font-bold uppercase tracking-wider text-white leading-none">
+                            NUEVO MERCH
+                        </h1>
+                    </div>
+                    <span class="bg-zinc-900/90 border border-monster-green/40 text-monster-green text-xs font-semibold px-3 py-1.5 rounded-full">
+                        Colección Oficial #MonsterArmy
+                    </span>
+                </div>
+
+                <!-- Los 3 Íconos / Productos del centro del boceto (Polerón/Prenda, Gorra/Casco, Mochila/Accesorio) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+                    
+                    <!-- Producto 1: Hoodie / Polerón Monster (Primer dibujo del boceto) -->
+                    <div onclick="openProductDetail(0)" class="wf-panel bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-700 hover:border-monster-green rounded-2xl p-4 flex flex-col items-center text-center transition cursor-pointer group/item">
+                        <div class="w-24 h-24 rounded-full bg-black/60 border border-zinc-700 group-hover/item:border-monster-green flex items-center justify-center mb-3 shadow-inner transition">
+                            <!-- SVG Hoodie con logo M -->
+                            <svg class="w-14 h-14 text-monster-green" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 12 L10 22 L16 30 L20 26 L20 52 L44 52 L44 26 L48 30 L54 22 L44 12 C40 16, 24 16, 20 12 Z" fill="#18181b"/>
+                                <path d="M24 12 C24 6, 40 6, 40 12" stroke-linecap="round"/>
+                                <!-- Mini garra en el pecho -->
+                                <path d="M28 26 L28 36 M32 25 L32 37 M36 26 L36 36" stroke="#50ff00" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="wf-text font-bold text-white text-base">Hoodie Pro "Claw"</h3>
+                        <p class="wf-subtext text-xs text-zinc-400 mt-0.5">Algodón pesado + Bordado Neón</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="text-monster-green wf-accent font-bold text-sm">$44.990</span>
+                            <span class="text-[11px] bg-monster-green text-black font-bold px-2 py-0.5 rounded">+ Ver</span>
+                        </div>
+                    </div>
+
+                    <!-- Producto 2: Gorra Snapback / Casco (Segundo dibujo circular del boceto) -->
+                    <div onclick="openProductDetail(1)" class="wf-panel bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-700 hover:border-monster-green rounded-2xl p-4 flex flex-col items-center text-center transition cursor-pointer group/item">
+                        <div class="w-24 h-24 rounded-full bg-black/60 border border-zinc-700 group-hover/item:border-monster-green flex items-center justify-center mb-3 shadow-inner transition">
+                            <!-- SVG Gorra Snapback / Casco -->
+                            <svg class="w-14 h-14 text-monster-green" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M14 36 C14 20, 50 20, 50 36 Z" fill="#18181b"/>
+                                <path d="M10 36 L56 36 C58 36, 58 41, 52 41 L14 41 Z" fill="#27272a"/>
+                                <circle cx="32" cy="21" r="2" fill="#50ff00"/>
+                                <path d="M29 27 L29 33 M32 26 L32 34 M35 27 L35 33" stroke="#50ff00" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="wf-text font-bold text-white text-base">Snapback VR46 Edition</h3>
+                        <p class="wf-subtext text-xs text-zinc-400 mt-0.5">Visera plana oficial Motorsport</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="text-monster-green wf-accent font-bold text-sm">$24.990</span>
+                            <span class="text-[11px] bg-monster-green text-black font-bold px-2 py-0.5 rounded">+ Ver</span>
+                        </div>
+                    </div>
+
+                    <!-- Producto 3: Mochila Táctica / Tumbler Térmico (Tercer dibujo cuadrado/cilíndrico del boceto) -->
+                    <div onclick="openProductDetail(2)" class="wf-panel bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-700 hover:border-monster-green rounded-2xl p-4 flex flex-col items-center text-center transition cursor-pointer group/item">
+                        <div class="w-24 h-24 rounded-2xl bg-black/60 border border-zinc-700 group-hover/item:border-monster-green flex items-center justify-center mb-3 shadow-inner transition">
+                            <!-- SVG Mochila / Gear Bag cuadrada como en el boceto -->
+                            <svg class="w-14 h-14 text-monster-green" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <rect x="16" y="16" width="32" height="38" rx="6" fill="#18181b"/>
+                                <path d="M24 16 L24 11 C24 9, 40 9, 40 11 L40 16"/>
+                                <rect x="21" y="34" width="22" height="14" rx="3" fill="#27272a"/>
+                                <path d="M29 22 L29 29 M32 21 L32 30 M35 22 L35 29" stroke="#50ff00" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="wf-text font-bold text-white text-base">Mochila Táctica Gaming</h3>
+                        <p class="wf-subtext text-xs text-zinc-400 mt-0.5">Compartimento Laptop 17" + Latas</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="text-monster-green wf-accent font-bold text-sm">$52.990</span>
+                            <span class="text-[11px] bg-monster-green text-black font-bold px-2 py-0.5 rounded">+ Ver</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Pie del bloque: "CONOCELOS AQUI" exactamente como en la esquina inferior izquierda del boceto -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-zinc-800/80 wf-border">
+                    <button onclick="openCatalogModal()" class="wf-btn bg-monster-green hover:bg-lime-400 text-black font-display text-2xl sm:text-3xl tracking-wider uppercase px-6 py-2 rounded-xl shadow-neon hover:shadow-neon-strong transition flex items-center gap-3 cursor-pointer">
+                        <span>CONÓCELOS AQUÍ</span>
+                        <i class="fa-solid fa-arrow-right text-lg"></i>
+                    </button>
+                    <p class="wf-subtext text-xs text-zinc-400 max-w-xs">
+                        Suma puntos con cada lata y canjea descuentos exclusivos en accesorios, ropa urbana y periféricos.
+                    </p>
+                </div>
+            </div>
+
+            <!-- BLOQUE DERECHO: NUESTRAS ENERGÉTICAS DE SIEMPRE (4 columnas de 12) -->
+            <div class="lg:col-span-4 wf-panel bg-monster-card border-2 border-monster-border rounded-3xl p-6 flex flex-col items-center justify-between text-center relative overflow-hidden">
+                
+                <!-- Texto Superior como en el boceto -->
+                <div class="w-full">
+                    <h2 class="wf-text font-display text-3xl sm:text-4xl font-bold uppercase tracking-wider text-white">
+                        NUESTRAS ENERGÉTICAS
+                    </h2>
+                    <div class="h-0.5 w-16 bg-monster-green mx-auto mt-1 rounded-full"></div>
+                </div>
+
+                <!-- Ilustración de la Lata Monster en el Centro (Tal como el dibujo de la lata con la M) -->
+                <div onclick="openDrinksModal()" class="my-4 relative cursor-pointer group" title="Explorar sabores clásicos">
+                    <!-- Halo verde detrás de la lata -->
+                    <div class="w-36 h-36 rounded-full bg-monster-green/20 blur-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:bg-monster-green/40 transition"></div>
+                    
+                    <!-- Lata dibujada en SVG de alta precisión -->
+                    <div class="can-floating relative z-10">
+                        <svg class="w-36 h-56 mx-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]" viewBox="0 0 140 220" fill="none">
+                            <!-- Tapa superior metálica -->
+                            <ellipse cx="70" cy="18" rx="46" ry="8" fill="#a1a1aa" stroke="#52525b" stroke-width="2"/>
+                            <ellipse cx="70" cy="18" rx="38" ry="5" fill="#71717a"/>
+                            <!-- Cuerpo de la lata -->
+                            <path d="M22 20 C22 20, 18 32, 18 42 L18 188 C18 198, 24 205, 30 207 L110 207 C116 205, 122 198, 122 188 L122 42 C122 32, 118 20, 118 20 Z" fill="#09090b" stroke="#3f3f46" stroke-width="2"/>
+                            <!-- Brillo lateral izquierdo -->
+                            <rect x="26" y="34" width="10" height="160" rx="5" fill="white" fill-opacity="0.07"/>
+                            <!-- Detalles verdes superiores -->
+                            <path d="M19 36 Q70 44 121 36" stroke="#50ff00" stroke-width="2.5" stroke-opacity="0.8"/>
+                            <!-- Garra Monster icónica en el centro de la lata -->
+                            <g transform="translate(38, 66)">
+                                <path d="M6 4 C10 20, 9 45, 12 66 L18 66 C16 45, 17 24, 16 12 L27 36 L32 36 L43 12 C42 24, 43 45, 41 66 L47 66 C50 45, 49 20, 53 4 L43 4 L30 28 L17 4 Z" fill="#50ff00"/>
+                            </g>
+                            <!-- Texto en la lata -->
+                            <text x="70" y="156" text-anchor="middle" fill="#ffffff" font-family="Teko, sans-serif" font-size="18" font-weight="bold" letter-spacing="2">MONSTER</text>
+                            <text x="70" y="170" text-anchor="middle" fill="#50ff00" font-family="Inter, sans-serif" font-size="7" font-weight="bold" letter-spacing="3">ENERGY</text>
+                            <!-- Base metálica inferior -->
+                            <path d="M28 206 Q70 215 112 206" stroke="#a1a1aa" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Texto Inferior: "DE SIEMPRE" como en el boceto -->
+                <div class="w-full">
+                    <p class="wf-text font-display text-3xl sm:text-4xl font-bold uppercase tracking-wider text-white">
+                        DE SIEMPRE
+                    </p>
+                    <button onclick="openDrinksModal()" class="mt-2 text-xs font-semibold text-monster-green wf-accent hover:underline flex items-center justify-center gap-1.5 mx-auto">
+                        <span>Ver línea Original, Ultra & Juice</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =====================================================================
+             3. SECCIÓN INFERIOR DIVIDIDA EN 2 COLUMNAS (Separadas por línea central)
+             Izquierda: "NUESTROS EMBAJADORES" (5 filas con nombre + categoría)
+             Derecha: "ULTIMAS NOTICIAS" (4 tarjetas rectangulares inclinadas)
+        ====================================================================== -->
+        <section class="wf-panel bg-monster-card border-2 border-monster-border rounded-3xl overflow-hidden">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-monster-border wf-border">
+                
+                <!-- COLUMNA IZQUIERDA: NUESTROS EMBAJADORES -->
+                <div id="embajadores" class="p-6 sm:p-8 flex flex-col">
+                    <!-- Título con línea superior e inferior como en el boceto -->
+                    <div class="border-y-2 border-zinc-700 wf-border py-3 mb-6 flex items-center justify-between">
+                        <h2 class="wf-text font-display text-3xl sm:text-4xl font-bold uppercase tracking-wider text-white">
+                            NUESTROS EMBAJADORES
+                        </h2>
+                        <span class="text-xs text-monster-green wf-accent font-semibold uppercase tracking-wider">Monster Roster</span>
+                    </div>
+
+                    <!-- Lista de 5 filas tal como las 5 líneas onduladas dobles del boceto -->
+                    <div class="flex flex-col gap-3.5 flex-1 justify-between">
+                        
+                        <!-- Embajador 1 -->
+                        <div onclick="showAmbassadorLook('Valentino Rossi', 'MotoGP & Motorsport Legend', 'Gorra VR46 + Hoodie Monster Claw')" class="wf-panel bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-monster-green/60 rounded-xl px-4 py-3 flex items-center justify-between transition cursor-pointer group">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-full bg-monster-green/15 border border-monster-green text-monster-green flex items-center justify-center font-display text-xl font-bold">
+                                    VR
+                                </div>
+                                <div>
+                                    <h3 class="wf-text font-bold text-white group-hover:text-monster-green transition text-sm sm:text-base">Valentino Rossi "VR46"</h3>
+                                    <p class="wf-subtext text-xs text-zinc-400">Usa: Snapback VR46 & Chaqueta Paddock</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block bg-zinc-800 text-monster-green wf-accent text-xs font-bold px-2.5 py-1 rounded-md border border-zinc-700">
+                                    MotoGP
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Embajador 2 -->
+                        <div onclick="showAmbassadorLook('Nyjah Huston', 'Skateboarding Pro World Champ', 'Polerón Oversize Monster Skate + Mochila Táctica')" class="wf-panel bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-monster-green/60 rounded-xl px-4 py-3 flex items-center justify-between transition cursor-pointer group">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-full bg-monster-green/15 border border-monster-green text-monster-green flex items-center justify-center font-display text-xl font-bold">
+                                    NH
+                                </div>
+                                <div>
+                                    <h3 class="wf-text font-bold text-white group-hover:text-monster-green transition text-sm sm:text-base">Nyjah Huston</h3>
+                                    <p class="wf-subtext text-xs text-zinc-400">Usa: Hoodie Streetwear & Tabla Ed. Limitada</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block bg-zinc-800 text-monster-green wf-accent text-xs font-bold px-2.5 py-1 rounded-md border border-zinc-700">
+                                    Skate
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Embajador 3 -->
+                        <div onclick="showAmbassadorLook('Team Liquid / Apex Squad', 'Esports & Pro Gaming Streamers', 'Mochila Gaming 17\" + Mousepad XL Monster')" class="wf-panel bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-monster-green/60 rounded-xl px-4 py-3 flex items-center justify-between transition cursor-pointer group">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-full bg-monster-green/15 border border-monster-green text-monster-green flex items-center justify-center font-display text-xl font-bold">
+                                    GG
+                                </div>
+                                <div>
+                                    <h3 class="wf-text font-bold text-white group-hover:text-monster-green transition text-sm sm:text-base">Monster Gaming Squad</h3>
+                                    <p class="wf-subtext text-xs text-zinc-400">Usa: Jersey Pro Gaming & Vaso Térmico</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block bg-zinc-800 text-monster-green wf-accent text-xs font-bold px-2.5 py-1 rounded-md border border-zinc-700">
+                                    Esports
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Embajador 4 -->
+                        <div onclick="showAmbassadorLook('Brandon Moreno', 'UFC Flyweight Champion', 'Guantes Entrenamiento + Polera Dry-Fit Monster')" class="wf-panel bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-monster-green/60 rounded-xl px-4 py-3 flex items-center justify-between transition cursor-pointer group">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-full bg-monster-green/15 border border-monster-green text-monster-green flex items-center justify-center font-display text-xl font-bold">
+                                    BM
+                                </div>
+                                <div>
+                                    <h3 class="wf-text font-bold text-white group-hover:text-monster-green transition text-sm sm:text-base">Brandon Moreno</h3>
+                                    <p class="wf-subtext text-xs text-zinc-400">Usa: Kit Fight Night & Bolso Deportivo</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block bg-zinc-800 text-monster-green wf-accent text-xs font-bold px-2.5 py-1 rounded-md border border-zinc-700">
+                                    UFC / MMA
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Embajador 5 -->
+                        <div onclick="showAmbassadorLook('Ken Block Legacy / Monster Rally', 'Gymkhana & Rallycross Icons', 'Gorra Trucker + Llavero Cinta Remove Before Flight')" class="wf-panel bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-monster-green/60 rounded-xl px-4 py-3 flex items-center justify-between transition cursor-pointer group">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-full bg-monster-green/15 border border-monster-green text-monster-green flex items-center justify-center font-display text-xl font-bold">
+                                    43
+                                </div>
+                                <div>
+                                    <h3 class="wf-text font-bold text-white group-hover:text-monster-green transition text-sm sm:text-base">División Rally & BMX</h3>
+                                    <p class="wf-subtext text-xs text-zinc-400">Usa: Beanie Invierno & Cortavientos</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block bg-zinc-800 text-monster-green wf-accent text-xs font-bold px-2.5 py-1 rounded-md border border-zinc-700">
+                                    Rally / BMX
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA: ÚLTIMAS NOTICIAS (4 Cajas inclinadas como en el boceto) -->
+                <div id="noticias" class="p-6 sm:p-8 flex flex-col">
+                    <!-- Título con línea superior e inferior como en el boceto -->
+                    <div class="border-y-2 border-zinc-700 wf-border py-3 mb-6 flex items-center justify-between">
+                        <h2 class="wf-text font-display text-3xl sm:text-4xl font-bold uppercase tracking-wider text-white">
+                            ÚLTIMAS NOTICIAS
+                        </h2>
+                        <span class="text-xs text-zinc-400 wf-subtext">Comunidad & Drops</span>
+                    </div>
+
+                    <!-- Las 4 Cajas Rectangulares/Inclinadas de Noticias del Boceto -->
+                    <div class="flex flex-col gap-4 flex-1 justify-between">
+                        
+                        <!-- Noticia 1 -->
+                        <article onclick="openNewsModal(0)" class="skew-card wf-panel bg-zinc-900/90 border-2 border-zinc-700 rounded-xl p-4 cursor-pointer flex items-center justify-between gap-4">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase text-monster-green wf-accent tracking-wider">Lanzamiento Merch • Hoy</span>
+                                <h3 class="wf-text font-bold text-white text-sm sm:text-base mt-0.5">
+                                    Nuevo Drop Streetwear: "Unleash The Beast" Otoño/Invierno ya disponible
+                                </h3>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-monster-green shrink-0"></i>
+                        </article>
+
+                        <!-- Noticia 2 -->
+                        <article onclick="openNewsModal(1)" class="skew-card wf-panel bg-zinc-900/90 border-2 border-zinc-700 rounded-xl p-4 cursor-pointer flex items-center justify-between gap-4">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase text-monster-green wf-accent tracking-wider">Programa de Fidelidad • Promo</span>
+                                <h3 class="wf-text font-bold text-white text-sm sm:text-base mt-0.5">
+                                    Canjea los anillos verdes de tus latas por gorras y polerones exclusivos
+                                </h3>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-monster-green shrink-0"></i>
+                        </article>
+
+                        <!-- Noticia 3 -->
+                        <article onclick="openNewsModal(2)" class="skew-card wf-panel bg-zinc-900/90 border-2 border-zinc-700 rounded-xl p-4 cursor-pointer flex items-center justify-between gap-4">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase text-monster-green wf-accent tracking-wider">Eventos & Cultura • Tour</span>
+                                <h3 class="wf-text font-bold text-white text-sm sm:text-base mt-0.5">
+                                    Pop-Up Store Monster Army llega a los principales festivales y torneos Esports
+                                </h3>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-monster-green shrink-0"></i>
+                        </article>
+
+                        <!-- Noticia 4 -->
+                        <article onclick="openNewsModal(3)" class="skew-card wf-panel bg-zinc-900/90 border-2 border-zinc-700 rounded-xl p-4 cursor-pointer flex items-center justify-between gap-4">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase text-monster-green wf-accent tracking-wider">Colaboración Especial • Ed. Limitada</span>
+                                <h3 class="wf-text font-bold text-white text-sm sm:text-base mt-0.5">
+                                    Cascos réplica y accesorios diseñados junto a nuestros embajadores mundiales
+                                </h3>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-monster-green shrink-0"></i>
+                        </article>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER CON RESUMEN DEL OBJETIVO SMART PARA EL TRABAJO ACADÉMICO -->
+    <footer class="w-full max-w-7xl mx-auto px-4 sm:px-6 pb-8 pt-2">
+        <div class="wf-panel bg-zinc-950 border border-zinc-800 rounded-2xl p-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-monster-green animate-pulse"></span>
+                <span><strong>Prototipo Wireframe Monster Energy:</strong> Ecosistema de Bebidas + Merch Oficial para fortalecer identidad y ventas recurrentes.</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="openCatalogModal()" class="hover:text-monster-green underline">Catálogo Merch</button>
+                <span>•</span>
+                <button onclick="openDrinksModal()" class="hover:text-monster-green underline">Bebidas</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         MODALES INTERACTIVOS (Para probar "CONÓCELOS AQUÍ", Productos y Carrito)
+     ====================================================================== -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border-2 border-monster-green rounded-2xl max-w-2xl w-full p-6 relative shadow-neon max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Datos del Catálogo de Merch Oficial (Objetivo SMART)
+        const merchProducts = [
+            {
+                id: 0,
+                name: 'Hoodie Pro "Claw" Monster Army',
+                category: 'Streetwear Oficial',
+                price: '$44.990',
+                desc: 'Polerón canguro de alto gramaje con logo Monster bordado en hilo verde flúor reflectante y bolsillo oculto para pase o llaves.',
+                badge: 'Más Vendido'
+            },
+            {
+                id: 1,
+                name: 'Gorra Snapback VR46 Edition',
+                category: 'Headwear & Motorsport',
+                price: '$24.990',
+                desc: 'Gorra oficial de visera plana con paneles respirables y bordado 3D de la garra Monster junto al número 46.',
+                badge: 'Edición Embajador'
+            },
+            {
+                id: 2,
+                name: 'Mochila Táctica Gaming & Urban',
+                category: 'Accesorios & Gear',
+                price: '$52.990',
+                desc: 'Resistente al agua, compartimento acolchado para notebook de hasta 17" y bolsillos térmicos laterales diseñados para latas Monster de 473ml.',
+                badge: 'Nuevo Drop'
+            },
+            {
+                id: 3,
+                name: 'Vaso Térmico Tumbler Matte Black',
+                category: 'Cultura Monster',
+                price: '$19.990',
+                desc: 'Acero inoxidable de doble pared con grabado láser del logo Monster. Mantiene la temperatura fría por 12 horas.',
+                badge: 'Coleccionable'
+            }
+        ];
+
+        const newsArticles = [
+            {
+                title: 'Nuevo Drop Streetwear: "Unleash The Beast" Otoño/Invierno',
+                tag: 'Lanzamiento Merch',
+                body: 'Inspirados en el éxito de grandes marcas de estilo de vida como Coca-Cola, Monster lanza su línea textil completa para que la comunidad lleve la garra más allá de la lata.'
+            },
+            {
+                title: 'Canjea los anillos verdes de tus latas por Merch exclusivo',
+                tag: 'Programa de Fidelidad',
+                body: 'Cada lata suma puntos en tu Cuenta Monster. Acumula códigos bajo el abrefácil y desbloquea descuentos directos o productos exclusivos de la tienda.'
+            },
+            {
+                title: 'Pop-Up Store Monster Army en festivales y torneos Esports',
+                tag: 'Eventos & Cultura',
+                body: 'Experimenta los productos en vivo junto a simuladores de carrera, rampas de skate y zonas de personalización de prendas.'
+            },
+            {
+                title: 'Accesorios co-diseñados con nuestros Embajadores Mundiales',
+                tag: 'Colaboración Especial',
+                body: 'Parte de las ventas del merch firmado por nuestros atletas apoya a nuevos talentos del deporte urbano y gaming en Latinoamérica.'
+            }
+        ];
+
+        let cart = [];
+
+        function updateCartBadge() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+
+        function addToCart(productIndex) {
+            const item = merchProducts[productIndex];
+            cart.push(item);
+            updateCartBadge();
+            openCartModal();
+        }
+
+        function openProductDetail(index) {
+            const p = merchProducts[index];
+            const html = `
+                <span class="text-xs font-bold uppercase tracking-widest text-monster-green">${p.category} • ${p.badge}</span>
+                <h3 class="font-display text-4xl uppercase text-white mt-1">${p.name}</h3>
+                <p class="text-zinc-300 text-sm mt-2 leading-relaxed">${p.desc}</p>
+                <div class="my-5 p-4 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-zinc-400 block">Precio Oficial</span>
+                        <span class="text-2xl font-bold text-monster-green">${p.price}</span>
+                    </div>
+                    <span class="text-xs bg-monster-green/10 text-monster-green border border-monster-green/30 px-3 py-1 rounded-full">
+                        Envío Gratis con 6 Latas
+                    </span>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="addToCart(${p.id})" class="flex-1 bg-monster-green hover:bg-lime-400 text-black font-bold py-3 rounded-xl transition">
+                        <i class="fa-solid fa-cart-plus mr-2"></i>Agregar al Carrito Monster
+                    </button>
+                    <button onclick="openCatalogModal()" class="px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-sm font-semibold">
+                        Ver Todo el Merch
+                    </button>
+                </div>
+            `;
+            showModal(html);
+        }
+
+        function openCatalogModal() {
+            const cards = merchProducts.map(p => `
+                <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase bg-monster-green/20 text-monster-green px-2 py-0.5 rounded">${p.badge}</span>
+                        <h4 class="font-bold text-white mt-2">${p.name}</h4>
+                        <p class="text-xs text-zinc-400 mt-1">${p.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between">
+                        <span class="font-bold text-monster-green">${p.price}</span>
+                        <button onclick="addToCart(${p.id})" class="bg-monster-green text-black text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-lime-400 transition">
+                            + Agregar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            showModal(`
+                <span class="text-xs font-bold uppercase tracking-widest text-monster-green">Catálogo Completo</span>
+                <h3 class="font-display text-4xl uppercase text-white">TIENDA DE MERCH MONSTER</h3>
+                <p class="text-xs text-zinc-400 mb-4">Creado para expandir las ventas más allá de las bebidas energéticas y consolidar la comunidad Monster.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">${cards}</div>
+            `);
+        }
+
+        function openDrinksModal() {
+            showModal(`
+                <span class="text-xs font-bold uppercase tracking-widest text-monster-green">Nuestras Energéticas de Siempre</span>
+                <h3 class="font-display text-4xl uppercase text-white">EL COMBUSTIBLE ORIGINAL</h3>
+                <p class="text-sm text-zinc-300 mb-4">Combina tu pack de latas favoritas con cualquier prenda de Merch y obtén un 20% de descuento automático (Estrategia Cross-Selling).</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                    <div class="p-4 rounded-xl bg-zinc-950 border border-monster-green/50">
+                        <div class="font-display text-2xl text-monster-green">ORIGINAL GREEN</div>
+                        <p class="text-xs text-zinc-400 mt-1">El sabor clásico e inconfundible de 473ml.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-700">
+                        <div class="font-display text-2xl text-white">ZERO ULTRA</div>
+                        <p class="text-xs text-zinc-400 mt-1">Sin azúcar, máxima energía cítrica refrescante.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-zinc-950 border border-amber-500/50">
+                        <div class="font-display text-2xl text-amber-400">MANGO LOCO</div>
+                        <p class="text-xs text-zinc-400 mt-1">Mezcla de jugos exóticos con toda la potencia Monster.</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showAmbassadorLook(name, role, gear) {
+            showModal(`
+                <span class="text-xs font-bold uppercase tracking-widest text-monster-green">Embajador Oficial Monster</span>
+                <h3 class="font-display text-4xl uppercase text-white mt-1">${name}</h3>
+                <p class="text-sm text-zinc-400">${role}</p>
+                <div class="my-4 p-4 rounded-xl bg-zinc-950 border border-zinc-800">
+                    <span class="text-xs text-monster-green font-bold uppercase block">Equipamiento Merch que utiliza:</span>
+                    <p class="text-white font-semibold mt-1">${gear}</p>
+                </div>
+                <button onclick="openCatalogModal()" class="w-full bg-monster-green text-black font-bold py-2.5 rounded-xl hover:bg-lime-400 transition">
+                    Comprar el Look del Embajador
+                </button>
+            `);
+        }
+
+        function openNewsModal(index) {
+            const n = newsArticles[index];
+            showModal(`
+                <span class="text-xs font-bold uppercase tracking-widest text-monster-green">${n.tag}</span>
+                <h3 class="font-display text-3xl sm:text-4xl uppercase text-white mt-1">${n.title}</h3>
+                <p class="text-zinc-300 text-sm mt-3 leading-relaxed">${n.body}</p>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="openCatalogModal()" class="bg-monster-green text-black font-bold text-xs px-4 py-2.5 rounded-lg">
+                        Ir a la sección de Nuevo Merch
+                    </button>
+                </div>
+            `);
+        }
+
+        function toggleZoneModal() {
+            showModal(`
+                <h3 class="font-display text-3xl uppercase text-white">SELECCIONA TU ZONA</h3>
+                <p class="text-xs text-zinc-400 mb-4">Personaliza la disponibilidad de envíos de Merch y eventos locales.</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="setZone('CHILE')" class="p-3 rounded-xl bg-zinc-950 hover:border-monster-green border border-zinc-800 text-left font-semibold">🇨🇱 Chile</button>
+                    <button onclick="setZone('ARGENTINA')" class="p-3 rounded-xl bg-zinc-950 hover:border-monster-green border border-zinc-800 text-left font-semibold">🇦🇷 Argentina</button>
+                    <button onclick="setZone('MÉXICO')" class="p-3 rounded-xl bg-zinc-950 hover:border-monster-green border border-zinc-800 text-left font-semibold">🇲🇽 México</button>
+                    <button onclick="setZone('ESPAÑA')" class="p-3 rounded-xl bg-zinc-950 hover:border-monster-green border border-zinc-800 text-left font-semibold">🇪🇸 España</button>
+                </div>
+            `);
+        }
+
+        function setZone(zone) {
+            document.getElementById('currentZoneBadge').textContent = zone;
+            closeModal();
+        }
+
+        function toggleAccountModal() {
+            showModal(`
+                <span class="text-xs font-bold uppercase tracking-widest text-monster-green">Club Monster Army</span>
+                <h3 class="font-display text-3xl uppercase text-white">MI CUENTA & PUNTOS DE CANJE</h3>
+                <p class="text-xs text-zinc-400 mb-4">Ingresa los códigos de tus latas para desbloquear Merch exclusivo.</p>
+                <div class="space-y-3">
+                    <input type="text" placeholder="Correo electrónico o Usuario Monster" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-monster-green">
+                    <input type="text" placeholder="Código bajo la anilla de tu lata (Opcional)" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-monster-green">
+                    <button onclick="closeModal()" class="w-full bg-monster-green text-black font-bold py-2.5 rounded-xl">Entrar a mi Cuenta</button>
+                </div>
+            `);
+        }
+
+        function openCartModal() {
+            const list = cart.length === 0
+                ? `<p class="text-sm text-zinc-400 py-6 text-center">Aún no has agregado productos de Merch. ¡Haz clic en cualquiera de los 3 íconos de "NUEVO MERCH"!</p>`
+                : cart.map((item, idx) => `
+                    <div class="flex items-center justify-between py-2.5 border-b border-zinc-800">
+                        <div>
+                            <p class="font-bold text-sm text-white">${item.name}</p>
+                            <span class="text-xs text-monster-green">${item.price}</span>
+                        </div>
+                        <button onclick="removeFromCart(${idx})" class="text-xs text-red-400 hover:underline">Quitar</button>
+                    </div>
+                `).join('');
+
+            showModal(`
+                <h3 class="font-display text-3xl uppercase text-white">TU BOLSA DE MERCH MONSTER</h3>
+                <div class="my-3">${list}</div>
+                ${cart.length > 0 ? `<button onclick="cart=[];updateCartBadge();closeModal();" class="w-full bg-monster-green text-black font-bold py-3 rounded-xl mt-2">Finalizar Pedido de Prueba</button>` : ''}
+            `);
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            updateCartBadge();
+            openCartModal();
+        }
+
+        function showModal(innerHTML) {
+            document.getElementById('modalContent').innerHTML = innerHTML;
+            document.getElementById('modalOverlay').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.add('hidden');
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Alternar entre Diseño Final Monster (Oscuro/Neón) y Modo Wireframe B&N para presentación
+        function toggleWireframeMode() {
+            document.body.classList.toggle('wireframe-mode');
+            const isWf = document.body.classList.contains('wireframe-mode');
+            document.getElementById('wfBtnText').textContent = isWf
+                ? 'Volver al Diseño Monster Neón'
+                : 'Ver como Boceto / Wireframe B&N';
+        }
+    </script>
+</body>
+</html>
